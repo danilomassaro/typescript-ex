@@ -1,0 +1,12 @@
+apiVersion: tekton.dev/v1alpha1
+kind: TaskRun
+metadata:
+  name: exercise-taskrun
+spec:
+  inputs:
+    resources:
+      - name: exercise
+        resourceRef:
+          name: exercise
+  taskRef:
+    name: exercise-ci

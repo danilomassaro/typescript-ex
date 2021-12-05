@@ -1,0 +1,44 @@
+apiVersion: tekton.dev/v1alpha1
+kind: Task
+metadata:
+  name: exercise-ci
+spec:
+  inputs:
+    resources:
+      - name: exercise
+        type: git
+    params:
+      - name: OUTPUT
+        description: The image tag which will be built
+        default: dmassaro/dmassaro-typescript-ex:latest
+  steps:
+    - name: npm-install
+      image: node
+      command:
+        - /bin/sh
+        - -c
+      args:
+        - npm install
+      workingDir: /workspace/exercise
+    - name: test
+      image: node
+      command:
+        - /bin/sh
+        - -c
+      args:
+        - npm run test
+      workingDir: /workspace/exercise
+    - name: build
+      image: node
+      command:
+        - /bin/sh
+        - -c
+      args:
+        - npm run build
+      workingDir: /workspace/exercise
+      volumeMounts:
+        - name: containers-storage
+          mountPath: /var/lib/containers
+  volumes:  
+    - name: containers-storage
+      emptyDir: {}
